@@ -92,7 +92,7 @@ const RevealText = ({ children, className = "" }: { children: React.ReactNode, c
 
 const RobertPortrait = ({ className = "", grayscale = false }: { className?: string, grayscale?: boolean }) => {
   // Use a high-quality professional portrait as the default/fallback
-  const [imageUrl, setImageUrl] = useState<string | null>("https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop");
+  const [imageUrl, setImageUrl] = useState<string | null>("https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1974&auto=format&fit=crop");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -145,7 +145,7 @@ const RobertPortrait = ({ className = "", grayscale = false }: { className?: str
 
   return (
     <img 
-      src={imageUrl || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop"} 
+      src={imageUrl || "https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1974&auto=format&fit=crop"} 
       alt="Robert Mwila" 
       className={`${className} ${grayscale ? 'grayscale hover:grayscale-0' : ''} transition-all duration-1000`}
       referrerPolicy="no-referrer"
