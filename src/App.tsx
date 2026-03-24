@@ -92,7 +92,7 @@ const RevealText = ({ children, className = "" }: { children: React.ReactNode, c
 
 const RobertPortrait = ({ className = "", grayscale = false }: { className?: string, grayscale?: boolean }) => {
   // Use a high-quality professional portrait as the default/fallback
-  const [imageUrl, setImageUrl] = useState<string | null>("https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1974&auto=format&fit=crop");
+  const [imageUrl, setImageUrl] = useState<string | null>("https://images.unsplash.com/photo-1537511446984-935f663eb1f4?q=80&w=2070&auto=format&fit=crop");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -111,7 +111,7 @@ const RobertPortrait = ({ className = "", grayscale = false }: { className?: str
         contents: {
           parts: [
             {
-              text: "A professional, high-end editorial portrait of a confident Black man named Robert Mwila. He has a short haircut, a warm smile with white teeth, and is wearing stylish round dark sunglasses. He is dressed in a sharp brown suit jacket, a paisley patterned tie, and a matching pocket square. He is standing with his arms crossed, wearing a silver luxury watch. The background is a sophisticated, softly blurred architectural setting with classical columns. High-contrast lighting, professional photography style.",
+              text: "A professional, high-end editorial portrait of a confident Black man named Robert Mwila. He has a short haircut and a well-groomed salt-and-pepper beard. He has a warm, friendly smile and is wearing a stylish blue textured blazer over a crisp white button-down shirt (no tie). He is standing with his arms crossed in a confident but approachable pose. The background is a modern, softly blurred office balcony with clean architectural lines and natural daylight. Professional photography style, sharp focus on the subject.",
             },
           ],
         },
@@ -145,7 +145,7 @@ const RobertPortrait = ({ className = "", grayscale = false }: { className?: str
 
   return (
     <img 
-      src={imageUrl || "https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1974&auto=format&fit=crop"} 
+      src={imageUrl || "https://images.unsplash.com/photo-1537511446984-935f663eb1f4?q=80&w=2070&auto=format&fit=crop"} 
       alt="Robert Mwila" 
       className={`${className} ${grayscale ? 'grayscale hover:grayscale-0' : ''} transition-all duration-1000`}
       referrerPolicy="no-referrer"
