@@ -91,14 +91,15 @@ const RevealText = ({ children, className = "" }: { children: React.ReactNode, c
 // --- Robert Portrait Component ---
 
 const RobertPortrait = ({ className = "", grayscale = false }: { className?: string, grayscale?: boolean }) => {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  // Use a high-quality professional portrait as the default/fallback
+  const [imageUrl, setImageUrl] = useState<string | null>("https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const generatePortrait = useCallback(async () => {
-    const apiKey = process.env.GEMINI_API_KEY;
+    // On Vercel, you must set VITE_GEMINI_API_KEY in your environment variables for this to work
+    const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      setError("API Key missing");
       return;
     }
 
@@ -124,7 +125,7 @@ const RobertPortrait = ({ className = "", grayscale = false }: { className?: str
       }
     } catch (err) {
       console.error("Error generating portrait:", err);
-      setError("Failed to generate");
+      // We don't set an error state that blocks the UI, we just keep the fallback
     } finally {
       setIsLoading(false);
     }
@@ -142,17 +143,9 @@ const RobertPortrait = ({ className = "", grayscale = false }: { className?: str
     );
   }
 
-  if (error || !imageUrl) {
-    return (
-      <div className={`flex items-center justify-center bg-zinc-100 text-pizza-muted text-xs text-center p-4 ${className}`}>
-        {error || "Portrait unavailable"}
-      </div>
-    );
-  }
-
   return (
     <img 
-      src={imageUrl} 
+      src={imageUrl || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop"} 
       alt="Robert Mwila" 
       className={`${className} ${grayscale ? 'grayscale hover:grayscale-0' : ''} transition-all duration-1000`}
       referrerPolicy="no-referrer"
@@ -228,7 +221,7 @@ const BLOG_POSTS: BlogPost[] = [
     date: 'March 10, 2026',
     author: 'Robert Mwila',
     readTime: '6 min read',
-    image: '/robert-mwila.png',
+    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop',
     category: 'Operations'
   },
   {
@@ -324,7 +317,7 @@ const BLOG_POSTS: BlogPost[] = [
     date: 'March 15, 2026',
     author: 'Ai-Expert Team',
     readTime: '8 min read',
-    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=2072&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=2074&auto=format&fit=crop',
     category: 'Operations'
   },
   {
@@ -368,7 +361,7 @@ const BLOG_POSTS: BlogPost[] = [
     date: 'March 20, 2026',
     author: 'Ai-Expert Team',
     readTime: '7 min read',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070&auto=format&fit=crop',
     category: 'Strategy'
   }
 ];
