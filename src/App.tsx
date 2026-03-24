@@ -358,11 +358,11 @@ const MagneticButton = ({ children, className, onClick, "data-cursor": cursor }:
 };
 
 export default function App() {
-  const [view, setView] = React.useState<View>('home');
-  const [selectedPost, setSelectedPost] = React.useState<BlogPost | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [activeCategory, setActiveCategory] = React.useState<string>('All');
-  const [isMarqueeHovered, setIsMarqueeHovered] = React.useState(false);
+  const [view, setView] = useState<View>('home');
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [isMarqueeHovered, setIsMarqueeHovered] = useState(false);
 
   const categories = ['All', 'Strategy', 'Operations', 'Automation'];
 
@@ -421,12 +421,6 @@ export default function App() {
     }
   ];
 
-  const handlePostClick = (post: BlogPost) => {
-    setSelectedPost(post);
-    setView('post');
-    window.scrollTo(0, 0);
-  };
-
   const [activeSection, setActiveSection] = useState<string>('');
 
   // Scroll Spy
@@ -457,9 +451,75 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [view]);
 
+  // Handle Browser Back/Forward Buttons
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const state = event.state;
+      if (state) {
+        setView(state.view || 'home');
+        if (state.view === 'post' && state.postId) {
+          const post = BLOG_POSTS.find(p => p.id === state.postId);
+          setSelectedPost(post || null);
+        } else {
+          setSelectedPost(null);
+        }
+      } else {
+        // Initial state or no state
+        const path = window.location.pathname;
+        if (path === '/blog') {
+          setView('blog');
+          setSelectedPost(null);
+        } else if (path.startsWith('/blog/')) {
+          const id = path.split('/').pop();
+          const post = BLOG_POSTS.find(p => p.id === id);
+          setView('post');
+          setSelectedPost(post || null);
+        } else {
+          setView('home');
+          setSelectedPost(null);
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    // Handle initial load based on URL
+    const initialPath = window.location.pathname;
+    let initialView: View = 'home';
+    let initialPost: BlogPost | null = null;
+
+    if (initialPath === '/blog') {
+      initialView = 'blog';
+      setView('blog');
+    } else if (initialPath.startsWith('/blog/')) {
+      const id = initialPath.split('/').pop();
+      initialPost = BLOG_POSTS.find(p => p.id === id) || null;
+      if (initialPost) {
+        initialView = 'post';
+        setView('post');
+        setSelectedPost(initialPost);
+      }
+    }
+
+    // Replace initial state so back button works correctly
+    window.history.replaceState({ view: initialView, postId: initialPost?.id }, '', initialPath);
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const navigateTo = (newView: View) => {
+    const path = newView === 'home' ? '/' : `/${newView}`;
+    window.history.pushState({ view: newView }, '', path);
     setView(newView);
+    setSelectedPost(null);
     setIsMenuOpen(false);
+    window.scrollTo(0, 0);
+  };
+
+  const handlePostClick = (post: BlogPost) => {
+    window.history.pushState({ view: 'post', postId: post.id }, '', `/blog/${post.id}`);
+    setSelectedPost(post);
+    setView('post');
     window.scrollTo(0, 0);
   };
 
