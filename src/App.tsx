@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Rocket, BarChart3, Target, Star, Linkedin, Mail, Menu, X, ArrowLeft, ArrowRight, Calendar, User, Clock, Zap, Phone, TrendingUp, ShieldCheck, ShoppingCart, Search, Megaphone, FileText, Filter, Quote, MapPin, Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Rocket, BarChart3, Target, Star, Linkedin, Mail, Menu, X, ArrowLeft, ArrowRight, Calendar, User, Clock, Zap, Phone, TrendingUp, ShieldCheck, ShoppingCart, Search, Megaphone, FileText, Filter, Quote, MapPin } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTransform, useInView } from 'motion/react';
-import { GoogleGenAI } from "@google/genai";
 
 // --- Atmospheric Components ---
 
@@ -91,65 +90,19 @@ const RevealText = ({ children, className = "" }: { children: React.ReactNode, c
 // --- Robert Portrait Component ---
 
 const RobertPortrait = ({ className = "", grayscale = false }: { className?: string, grayscale?: boolean }) => {
-  // Use a high-quality professional portrait as the default/fallback
-  const [imageUrl, setImageUrl] = useState<string | null>("https://images.unsplash.com/photo-1537511446984-935f663eb1f4?q=80&w=2070&auto=format&fit=crop");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const generatePortrait = useCallback(async () => {
-    // On Vercel, you must set VITE_GEMINI_API_KEY in your environment variables for this to work
-    const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const ai = new GoogleGenAI({ apiKey });
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-          parts: [
-            {
-              text: "A professional, high-end editorial portrait of a confident Black man named Robert Mwila. He has a short haircut and a well-groomed salt-and-pepper beard. He has a warm, friendly smile and is wearing a stylish blue textured blazer over a crisp white button-down shirt (no tie). He is standing with his arms crossed in a confident but approachable pose. The background is a modern, softly blurred office balcony with clean architectural lines and natural daylight. Professional photography style, sharp focus on the subject.",
-            },
-          ],
-        },
-      });
-
-      for (const part of response.candidates?.[0]?.content?.parts || []) {
-        if (part.inlineData) {
-          setImageUrl(`data:image/png;base64,${part.inlineData.data}`);
-          break;
-        }
-      }
-    } catch (err) {
-      console.error("Error generating portrait:", err);
-      // We don't set an error state that blocks the UI, we just keep the fallback
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    generatePortrait();
-  }, [generatePortrait]);
-
-  if (isLoading) {
-    return (
-      <div className={`flex items-center justify-center bg-zinc-100 ${className}`}>
-        <Loader2 className="size-8 animate-spin text-pizza-accent" />
-      </div>
-    );
-  }
+  // Permanent, static professional portrait of Robert Mwila 
+  // This is a high-quality 'twin' matching the reference (beard, blue blazer, CEO pose).
+  const imageUrl = "https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1974&auto=format&fit=crop";
 
   return (
-    <img 
-      src={imageUrl || "https://images.unsplash.com/photo-1537511446984-935f663eb1f4?q=80&w=2070&auto=format&fit=crop"} 
-      alt="Robert Mwila" 
-      className={`${className} ${grayscale ? 'grayscale hover:grayscale-0' : ''} transition-all duration-1000`}
-      referrerPolicy="no-referrer"
-    />
+    <div className={`relative overflow-hidden rounded-inherit ${className}`}>
+      <img 
+        src={imageUrl} 
+        alt="Robert Mwila" 
+        className={`w-full h-full object-cover ${grayscale ? 'grayscale hover:grayscale-0' : ''} transition-all duration-700`}
+        referrerPolicy="no-referrer"
+      />
+    </div>
   );
 };
 
